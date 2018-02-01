@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+soft_OSX/
+
+*.Rproj
+
+\.DS_Store
