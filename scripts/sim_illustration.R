@@ -1,5 +1,6 @@
 library(ape)
 library(geiger)
+library(TreeSim)
 library(phytools)
 source("scripts/functions.R")
 # simulation viz

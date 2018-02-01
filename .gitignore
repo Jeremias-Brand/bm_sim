@@ -8,3 +8,5 @@ soft_OSX/
 *.Rproj
 
 \.DS_Store
+
+fig/
