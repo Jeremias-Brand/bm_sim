@@ -1,0 +1,35 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	1	sim_trees
+	3
+
+rule sim_trees:
+    output: out/simulated_trees_info.tsv
+    log: log/sim_trees.log
+    jobid: 2
+
+Finished job 2.
+1 of 3 steps (33%) done
+
+rule report:
+    input: out/simulated_trees_info.tsv
+    output: report.html
+    jobid: 1
+
+Finished job 1.
+2 of 3 steps (67%) done
+
+localrule all:
+    input: report.html
+    jobid: 0
+
+Finished job 0.
+3 of 3 steps (100%) done
+Shutting down, this might take some time.
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-03T173245.181282.snakemake.log

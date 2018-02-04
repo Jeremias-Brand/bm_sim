@@ -1,0 +1,30 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	1	sim_trees
+	3
+
+rule sim_trees:
+    output: out/simulated_trees_info.tsv
+    log: log/sim_trees.log
+    jobid: 2
+
+Error in rule sim_trees:
+    jobid: 2
+    output: out/simulated_trees_info.tsv
+    log: log/sim_trees.log
+
+RuleException:
+CalledProcessError in line 81 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Command ' set -euo pipefail;  Rscript /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/scripts/.snakemake.0qp3v7_j.test.R ' returned non-zero exit status 1.
+  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 81, in __rule_sim_trees
+  File "/Users/jeremias/.pyenv/versions/anaconda3-5.0.0/lib/python3.6/concurrent/futures/thread.py", line 55, in run
+Will exit after finishing currently running jobs.
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-03T172744.460863.snakemake.log
