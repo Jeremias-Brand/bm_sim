@@ -1,0 +1,87 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 6
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	5	run_bayou
+	1	tre_sim
+	8
+
+rule run_bayou:
+    input: data/t1_N200_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 7
+    benchmark: bench/t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N200_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule run_bayou:
+    input: data/t1_N10_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N10_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N10_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 4
+    benchmark: bench/t1_N10_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N10_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule tre_sim:
+    output: out/simulated_trees_info.tsv
+    log: log/tre_sim.log
+    jobid: 3
+    benchmark: bench/tre_sim.txt
+
+rule run_bayou:
+    input: data/t1_N50_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N50_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N50_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 2
+    benchmark: bench/t1_N50_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N50_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule run_bayou:
+    input: data/t1_N100_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 5
+    benchmark: bench/t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N100_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule run_bayou:
+    input: data/t1_N400_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 6
+    benchmark: bench/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N400_clade0.2_b1.5_d0.5_rate10, n=1
+
+Finished job 3.
+1 of 8 steps (12%) done
+Finished job 4.
+2 of 8 steps (25%) done
+Finished job 2.
+3 of 8 steps (38%) done
+Finished job 5.
+4 of 8 steps (50%) done
+Finished job 7.
+5 of 8 steps (62%) done
+Finished job 6.
+6 of 8 steps (75%) done
+
+rule report:
+    input: t1_N10_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N50_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou, out/simulated_trees_info.tsv
+    output: report.html
+    jobid: 1
+
+Finished job 1.
+7 of 8 steps (88%) done
+
+localrule all:
+    input: report.html
+    jobid: 0
+
+Finished job 0.
+8 of 8 steps (100%) done
+Shutting down, this might take some time.
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-03T231501.383487.snakemake.log

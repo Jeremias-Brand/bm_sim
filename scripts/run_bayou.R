@@ -14,6 +14,8 @@ checkpoint = snakemake@output[["checkpoint"]]
 # trait_f = "data/t10_N100_clade20_b1.5_d0.5_rate10.trait"
 source(prior_f)
 prefix = strsplit( strsplit(trait_f, ".trait")[[1]][1], "/")[[1]][2]
+pr = strsplit( strsplit(prior_f, ".bayou")[[1]][1], "/")[[1]][2]
+
 outdir <- "./out/bayou/"
 
 # READ PARAMETER
@@ -50,15 +52,20 @@ ch2 <- load.bayou(
   t_ch2, save.Rdata = T, cleanup = F, file = paste0(outdir, prefix, "_2.rds"))
 ch2 <- set.burnin(ch2, burnin)
 
+sink(paste0(outdir, prefix, "_", pr, ".summary.txt"))
+print("# Chain 1")
+summary(ch1)
+print("# Chain 2")
+summary(ch2)  
+sink()
 
 
-gelman.R("lnL", chain1=ch1, chain2=ch2,
+G_lnl <- gelman.R("lnL", chain1=ch1, chain2=ch2,
+                  plot=F, type="n", ylim=c(0.9, 2))
+
+G_sig2 <- gelman.R("sig2", chain1=ch1, chain2=ch2,
          plot=F, type="n", ylim=c(0.9, 2))
-gelman.R("alpha", chain1=ch1, chain2=ch2,
-         plot=F, type="n", ylim=c(0.9, 2))
-gelman.R("sig2", chain1=ch1, chain2=ch2,
-         plot=F, type="n", ylim=c(0.9, 2))
 
-
-
+write.table(G_lnl, paste0(outdir, prefix, ".gelman.lnl.txt"), quote = F, row.names = F)
+write.table(G_sig2, paste0(outdir, prefix, ".gelman.sig2.txt"), quote = F, row.names = F)
 write.csv(x = "", file = checkpoint)

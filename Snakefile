@@ -74,6 +74,26 @@ for s in sel_n_sim:
                             "."      +str(t)
                             )
 
+
+tree_list = []
+for s in sel_n_sim:
+    for n in sel_n_tips:
+        for c in sel_clade:
+            for r in sel_rate:
+                for p in sel_prior_set:
+                    for t in sel_tool:
+                        tree_list.append("data/" +
+                            "t"      +str(s)+ 
+                            "_N"     +str(n)+ 
+                            "_clade" +str(c)+
+                            "_b"     +str(birth)+ 
+                            "_d"     +str(death)+ 
+                            "_rate"  +str(r)+
+                            ".trait" 
+                            )
+
+
+
 bayou_runs = []
 for i in analysis_list:
     if "bayou" in i:
@@ -106,7 +126,8 @@ for i in analysis_list:
 
 # Rules -----------------------------------------------------------------------
 
-
+onstart:
+    "scripts/tre_sim.R"
 
 rule all:
     input:
@@ -116,7 +137,9 @@ rule all:
 # TODO: the tree simulation must output a file that specifies where the shift is and also stores other params
 rule tre_sim:
     output:
-        "out/simulated_trees_info.tsv"
+        "out/simulated_trees_info.tsv",
+        tree_list
+
     log:
         "log/tre_sim.log"
     params:
@@ -140,7 +163,8 @@ rule run_bayou:
         trait_f = "data/{sample}.trait",
         prior_f = "config_files/pr{n}.bayou"
     output:
-        checkpoint = "{sample}_pr{n}.bayou"
+        checkpoint = "{sample}_pr{n}.bayou",
+        ch_sum = "out/bayou/{sample}_pr{n}.summary.txt"
     log:
         "log/{sample}_pr{n}.bayou.log"
     params:
@@ -154,7 +178,7 @@ rule run_bayou:
 
 rule bayou:
     input:
-        bayou_runs
+        bayou_runs,
     output:
         "bayou.report"
     log:
@@ -172,6 +196,7 @@ rule bayou:
 rule report:
     input:
         analysis_list,
+        "bayou.report",
         "out/simulated_trees_info.tsv",
         "fig/tree_sim_N100_clade0.2_b" + str(birth) + "_d" + str(death) + ".pdf" 
     output:
@@ -180,8 +205,7 @@ rule report:
         from snakemake.utils import report
         run_name = "testRUN"
         report("""
-        Results of the macpipe_trans run for transcriptome assembly and assessment.
-        Run timestamp/ID: {run_name}
+        Template for the report file {run_name}
         """, output[0], **input)
 
 

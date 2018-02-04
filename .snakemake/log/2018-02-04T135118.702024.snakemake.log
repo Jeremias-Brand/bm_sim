@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 179 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Missing input files for rule bayou:
+out/bayou/__snakemake_dynamic__.summary.txt

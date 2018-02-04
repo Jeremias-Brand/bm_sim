@@ -1,0 +1,67 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 3
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	5	run_bayou
+	7
+
+rule run_bayou:
+    input: data/t1_N400_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 3
+    benchmark: bench/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N400_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule run_bayou:
+    input: data/t1_N200_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 5
+    benchmark: bench/t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N200_clade0.2_b1.5_d0.5_rate10, n=1
+
+rule run_bayou:
+    input: data/t1_N100_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bayou
+    output: t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    log: log/t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    jobid: 7
+    benchmark: bench/t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou.txt
+    wildcards: sample=t1_N100_clade0.2_b1.5_d0.5_rate10, n=1
+
+Terminating processes on user request.
+Error in rule run_bayou:
+Error in rule run_bayou:
+    jobid: 3
+    jobid: 7
+Error in rule run_bayou:
+    output: t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    output: t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+    jobid: 5
+    log: log/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    log: log/t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+    output: t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou
+
+
+    log: log/t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou.log
+
+RuleException:
+CalledProcessError in line 176 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Command ' set -euo pipefail;  Rscript /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/scripts/.snakemake.yn1f93e9.run_bayou.R ' returned non-zero exit status 1.
+  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 176, in __rule_run_bayou
+  File "/Users/jeremias/.pyenv/versions/anaconda3-5.0.0/lib/python3.6/concurrent/futures/thread.py", line 55, in run
+RuleException:
+CalledProcessError in line 176 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Command ' set -euo pipefail;  Rscript /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/scripts/.snakemake.n5yy0rvk.run_bayou.R ' returned non-zero exit status 1.
+  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 176, in __rule_run_bayou
+  File "/Users/jeremias/.pyenv/versions/anaconda3-5.0.0/lib/python3.6/concurrent/futures/thread.py", line 55, in run
+RuleException:
+CalledProcessError in line 176 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Command ' set -euo pipefail;  Rscript /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/scripts/.snakemake.thxdew8x.run_bayou.R ' returned non-zero exit status 1.
+  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 176, in __rule_run_bayou
+  File "/Users/jeremias/.pyenv/versions/anaconda3-5.0.0/lib/python3.6/concurrent/futures/thread.py", line 55, in run
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-04T023144.936535.snakemake.log

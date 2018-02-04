@@ -1,3 +1,0 @@
-KeyError in line 76 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
-'n_sims'
-  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 76, in <module>

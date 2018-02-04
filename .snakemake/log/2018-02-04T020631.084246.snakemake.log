@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 138 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Missing input files for rule run_bayou:
+data/t1_N100_clade0.2_b1.5_d0.5_rate10.trait

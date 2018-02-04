@@ -1,0 +1,26 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 6
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	2
+
+rule report:
+    input: t1_N10_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N50_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N100_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N200_clade0.2_b1.5_d0.5_rate10_pr1.bayou, t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bayou, out/simulated_trees_info.tsv, fig/tree_sim_N100_clade0.2_b1.5_d0.5.pdf
+    output: report.html
+    jobid: 1
+
+Finished job 1.
+1 of 2 steps (50%) done
+
+localrule all:
+    input: report.html
+    jobid: 0
+
+Finished job 0.
+2 of 2 steps (100%) done
+Shutting down, this might take some time.
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-03T234953.043088.snakemake.log

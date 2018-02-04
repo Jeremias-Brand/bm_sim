@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 197 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Missing input files for rule report:
+bayou.reportout/simulated_trees_info.tsv
