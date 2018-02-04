@@ -18,6 +18,125 @@ if (!name.check(tree, trait) == "OK") {
   stop(paste("Names in", tree_f, "do not match names in", trait_f))
 }
 
+fixed.pars <- list(alpha= 1e-10)
+prior.fixed <- make.prior(tree,
+                          dists=list(
+                            dalpha="fixed", dsig2="dhalfcauchy",
+                            dsb="dsb", dk="cdpois", dtheta="dnorm"
+                          ), 
+                          param=list(
+                            dsig2=list(scale=1), dk=list(lambda=15, kmax=200),
+                            dsb=list(bmax=1,prob=1), dtheta=list(mean=mean(trait), sd=2)
+                          ),
+                          fixed=fixed.pars)
+
+startpar <- list(alpha=1e-10, sig2=1, k=1, ntheta=2, theta=c(1,2), 
+                 sb=1, t2=2, loc=0)
+
+bayou.mcmc(
+  tree = tree, dat = trait, SE = 0.05, model = "OU", prior = prior.fixed, startpar=startpar,
+  ngen = 10000, new.dir = ".", plot.freq = NULL, ticker.freq = 1000
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+# startpar <- list(sig2=1, k=13, ntheta=3, theta=c(0.7,0.4,0.3), 
+#                 lambda=15, kmax=200, bmax=1,prob=1)
+
+startpar <- list(alpha=0, sig2=1, k=3)
+
+
+bayou.mcmc(
+  tree = tree, dat = trait, SE = 0.05, model = "OU", prior = prior.fixed, startpar=fixed.pars,
+  ngen = ngen, new.dir = ".", plot.freq = NULL, ticker.freq = 1000)
+
+
+
+
+startpar <- list(alpha=1, sig2=1, k=3, ntheta=3, theta=c(0.7,0.4,0.3), 
+                 sb=c(12,23,31), t2=c(2,2,3))
+
+bayou.mcmc(
+  tree = tree, dat = trait, SE = 0.05, model = "OU", prior = prior.fixed, startpar=startpar,
+  ngen = ngen, new.dir = ".", plot.freq = NULL, ticker.freq = 1000
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fixed.hypothesisK3 <- list(k=3)
+prior.fixedK3<- make.prior(tree, dists=list(
+    dalpha="dhalfcauchy", dsig2="dhalfcauchy",
+    dsb="dsb", dk="fixed", dtheta="dnorm", dloc="dloc"
+  ),
+  param=list(
+    dalpha=list(scale=1), dsig2=list(scale=1),
+    dtheta=list(mean=mean(trait), sd=2)),
+  fixed=fixed.hypothesisK3
+  )
+
+
+startparK3 <- list(
+  alpha=0, sig2=1, ntheta=4, k=3, t2 = c(2,3,4),
+  theta=c(0.7, 0.3, 0.5, 1), sb = c(38, 102, 98), loc = c(0,0,0)
+)
+
+
+chain_cmd <- 
+  
+  debug( 
+    bayou.mcmc(
+  tree = tree, dat = trait, SE = 0.01, model = "OU", prior = fixed.hypothesisK3,
+  startpar = startparK3,
+  ngen = 100000, new.dir = tempdir, plot.freq = NULL, ticker.freq = 1000)
+  )
+
+
+
+
+
+# fixed parameters need both a prior as well as start parameters
+shift_loc <- c(132, 6, 8, 16, 37, 45, 59, 75, 79, 87, 100, 110, 89)
+fixed.pars <- list(sb = shift_loc, loc = rep(0,13))
+## Setting up fixed priors
+prior.fixed13 <- make.prior(tree, dists=list(
+    dalpha="dhalfcauchy",
+    dsig2="dhalfcauchy",
+    dsb="fixed",
+    dk="fixed",
+    dtheta="dnorm",
+    dloc="dloc"),
+    param=list(dalpha=list(scale=1),
+               dsig2=list(scale=1),
+               dtheta=list(mean=mean(trait), sd=2)),
+    fixed=fixed.hypothesis13)
+
+
+# For fixed hypothesis we need to define startparameters
+startpar13 <- list(alpha=1, sig2=1, k=13, ntheta=3, theta=c(0.7,0.4,0.3))
+startpar13$sb <- fixed.hypothesis13$sb
+startpar13$t2 <- c(2, rep(startpar13$ntheta, 12))
+startpar13$loc <- fixed.hypothesis13$loc
+
 
 
 
