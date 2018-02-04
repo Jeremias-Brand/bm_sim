@@ -1,23 +1,31 @@
 library(ape)
+library(phytools)
 library(geiger)
 library(TreeSim)
-library(phytools)
 source("scripts/functions.R")
+
+# script used in snakemake pipeline use the commented block if running without snakemake
+n_tips <- c(10, 50, 100, 200, 400)
+# rates <- c(1,2,5,10,100,1000)
+# n_sim <- 1
+# birth = 1.5
+# death = 0.5
+
+n_sim  = snakemake@config[["n_sim"]]
+# n_tips = snakemake@config[["n_tips"]]
+rates  = snakemake@config[["rates"]]
+birth  = snakemake@config[["birth"]]
+death  = snakemake@config[["death"]]
+clade_size = 0.2
+
 # simulation viz
 # this script produces plots illustrating what output the simulation produces
-n_tips <- c(10, 50, 100, 200, 400)
-rates <- c(1,2,5,10,100,1000)
-birth = 1.5
-death = 0.5
-nsim=1
-
-
 for (n in n_tips){
   
   sample <- sim_subclade(n, n/5, birth, death)
   tree <- sample[[1]]
   subtree <- sample[[2]]
-  pdf(paste0("fig/tree_sim_N",n, "_clade", n/5, "_b", birth, "_d", death ,".pdf"))
+  pdf(paste0("fig/tree_sim_N",n, "_clade", clade_size, "_b", birth, "_d", death, ".pdf"))
   
   for (r in rates){
     trait <- simBM_2rates(tree, subtree, R1=1, R2=r, model = "BM", root = 1)

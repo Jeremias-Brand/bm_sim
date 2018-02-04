@@ -21,16 +21,18 @@ clade_size = snakemake@config[["clade_size"]]
 
 for (i in 1:n_sim){
   for (n in n_tips){
-    sample <- sim_subclade(n, n * clade_size, birth, death)
-    tree <- sample[[1]]
-    subtree <- sample[[2]]
-    name = paste0("t", i, "_N",n, "_clade", n * clade_size, "_b", birth, "_d", death)
-    write.nexus(tree, file = paste0("data/", name, ".nex"))
-    write.tree(tree, file = paste0("data/", name, ".nwk"))
-    for (r in rates){
-      trait <- simBM_2rates(tree, subtree, R1=1, R2=r, model = "BM", root = 1)
-      write.table(trait, file = paste0("data/", name, "_rate", r, ".trait"),
-                  quote = F, row.names = T, col.names = F)
+    for (c in clade_size){
+      sample <- sim_subclade(n, n * c, birth, death)
+      tree <- sample[[1]]
+      subtree <- sample[[2]]
+      name = paste0("t", i, "_N",n, "_clade", c, "_b", birth, "_d", death)
+      write.nexus(tree, file = paste0("data/", name, ".nex"))
+      write.tree(tree, file = paste0("data/", name, ".nwk"))
+      for (r in rates){
+        trait <- simBM_2rates(tree, subtree, R1=1, R2=r, model = "BM", root = 1)
+        write.table(trait, file = paste0("data/", name, "_rate", r, ".trait"),
+                    quote = F, row.names = T, col.names = F)
+    }
     }
   }
 }

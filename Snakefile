@@ -44,6 +44,50 @@ def check_trailing_slash( path ):
 
 # Globals ---------------------------------------------------------------------
 
+sel_n_sim = range(1, config["sel_n_sim"] + 1)
+sel_n_tips = config["sel_n_tips"]
+sel_clade = config["sel_clade"]
+sel_rate = config["sel_rate"]
+sel_prior_set = config["sel_prior_set"]
+sel_tool = config["sel_tool"]
+
+# I don't expect that I will need to change these often
+birth = config["birth"]
+death = config["death"]
+
+
+analysis_list = []
+for s in sel_n_sim:
+    for n in sel_n_tips:
+        for c in sel_clade:
+            for r in sel_rate:
+                for p in sel_prior_set:
+                    for t in sel_tool:
+                        analysis_list.append(
+                            "t"      +str(s)+ 
+                            "_N"     +str(n)+ 
+                            "_clade" +str(c)+
+                            "_b"     +str(birth)+ 
+                            "_d"     +str(death)+ 
+                            "_rate"  +str(r)+ 
+                            "_pr"    +str(p)+ 
+                            "."      +str(t)
+                            )
+
+bayou_runs = []
+for i in analysis_list:
+    if "bayou" in i:
+        bayou_runs.append(i)
+
+bt_runs = []
+for i in analysis_list:
+    if "bt" in i:
+        bt_runs.append(i)
+
+bamm_runs = []
+for i in analysis_list:
+    if "bamm" in i:
+        bamm_runs.append(i)
 # define global things here
 
 
@@ -72,8 +116,7 @@ rule all:
 # TODO: the tree simulation must output a file that specifies where the shift is and also stores other params
 rule tre_sim:
     output:
-        "out/simulated_trees_info.tsv",
-        str(config["n_sim"]) + "lelfile"
+        "out/simulated_trees_info.tsv"
     log:
         "log/tre_sim.log"
     params:
@@ -85,13 +128,52 @@ rule tre_sim:
     script:
         "scripts/tre_sim.R"
 
+rule tre_sim_illustration:
+    output:
+        "fig/tree_sim_N100_clade20_b" + str(birth) + "_d" + str(death) + ".pdf" 
+    script:
+        "scripts/sim_illustration.R"
 
 
+rule run_bayou:
+    input:
+        trait_f = "data/{sample}.trait",
+        prior_f = "config_files/pr{n}.bayou"
+    output:
+        checkpoint = "{sample}_pr{n}.bayou"
+    log:
+        "log/{sample}_pr{n}.bayou.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    benchmark:
+        "bench/{sample}_pr{n}.bayou.txt"
+    script:
+        "scripts/run_bayou.R"
+
+rule bayou:
+    input:
+        bayou_runs
+    output:
+        "bayou.report"
+    log:
+        "log/bayou.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    shell:
+        """
+        touch bayou.report
+        """
 
 
 rule report:
     input:
-       "out/simulated_trees_info.tsv"
+        analysis_list,
+        "out/simulated_trees_info.tsv",
+        "fig/tree_sim_N100_clade0.2_b" + str(birth) + "_d" + str(death) + ".pdf" 
     output:
         report_name         = "report.html"
     run:
