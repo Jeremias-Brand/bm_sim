@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	report
+	5	run_bt
+	7
+
+rule run_bt:
+    input: data/t1_N400_clade0.2_b1.5_d0.5_rate10.trait, config_files/pr1.bt
+    output: t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bt, out/bt/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.summary.txt
+    log: log/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bt.log
+    jobid: 5
+    benchmark: bench/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bt.txt
+    wildcards: sample=t1_N400_clade0.2_b1.5_d0.5_rate10, n=1
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 193 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
+Missing files after 5 seconds:
+t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.bt
+out/bt/t1_N400_clade0.2_b1.5_d0.5_rate10_pr1.summary.txt
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Will exit after finishing currently running jobs.
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/.snakemake/log/2018-02-05T002123.646663.snakemake.log

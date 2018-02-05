@@ -1,0 +1,7 @@
+7
+2
+VarRates
+LogFile bt_files_5mil
+SaveModels
+Iterations 11000000
+Run

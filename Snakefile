@@ -80,17 +80,15 @@ for s in sel_n_sim:
     for n in sel_n_tips:
         for c in sel_clade:
             for r in sel_rate:
-                for p in sel_prior_set:
-                    for t in sel_tool:
-                        tree_list.append("data/" +
-                            "t"      +str(s)+ 
-                            "_N"     +str(n)+ 
-                            "_clade" +str(c)+
-                            "_b"     +str(birth)+ 
-                            "_d"     +str(death)+ 
-                            "_rate"  +str(r)+
-                            ".trait" 
-                            )
+                tree_list.append("data/" +
+                    "t"      +str(s)+ 
+                    "_N"     +str(n)+ 
+                    "_clade" +str(c)+
+                    "_b"     +str(birth)+ 
+                    "_d"     +str(death)+ 
+                    "_rate"  +str(r)+
+                    ".trait" 
+                    )
 
 
 
@@ -178,7 +176,7 @@ rule run_bayou:
 
 rule bayou:
     input:
-        bayou_runs,
+        bayou_runs
     output:
         "bayou.report"
     log:
@@ -190,6 +188,41 @@ rule bayou:
     shell:
         """
         touch bayou.report
+        """
+
+rule run_bt:
+    input:
+        trait_f = "data/{sample}.trait",
+        prior_f = "config_files/pr{n}.bt"
+    output:
+        checkpoint = "{sample}_pr{n}.bt",
+        ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
+    log:
+        "log/{sample}_pr{n}.bt.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    benchmark:
+        "bench/{sample}_pr{n}.bt.txt"
+    script:
+        "scripts/run_bt.py"
+
+
+rule bt:
+    input:
+        bt_runs
+    output:
+        "bt.report"
+    log:
+        "log/bt.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    shell:
+        """
+        touch bt.report
         """
 
 

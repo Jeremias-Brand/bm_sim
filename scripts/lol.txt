@@ -1,0 +1,8 @@
+7
+2
+VarRates
+
+prior Alpha-1 invgamma 2 1
+prior Sigma-1 invgamma 2 1
+
+Iterations 1000000
