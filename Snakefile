@@ -151,7 +151,7 @@ rule tre_sim:
 
 rule tre_sim_illustration:
     output:
-        "fig/tree_sim_N100_clade0.2_b" + str(birth) + "_d" + str(death) + ".pdf" 
+        "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
     script:
         "scripts/sim_illustration.R"
 
@@ -264,8 +264,8 @@ rule report:
         "bt.report",
         "bayou.report",
         "bamm.report",
-        "out/simulated_trees_info.csv",
-        "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
+        "out/simulated_trees_info.csv"
+        # "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
     output:
         report_name         = "report.html"
     run:

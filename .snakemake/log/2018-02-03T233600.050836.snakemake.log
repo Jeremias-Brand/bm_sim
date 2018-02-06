@@ -1,3 +1,0 @@
-TypeError in line 133 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
-must be str, not float
-  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 133, in <module>

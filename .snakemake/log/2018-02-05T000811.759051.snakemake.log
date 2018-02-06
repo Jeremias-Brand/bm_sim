@@ -1,3 +1,0 @@
-WorkflowError in line 152 of /Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile:
-Duplicate output file pattern in rule tre_sim. First two duplicate for entries 1 and 2
-  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 152, in <module>

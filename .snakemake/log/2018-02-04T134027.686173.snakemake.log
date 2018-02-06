@@ -1,3 +1,0 @@
-SyntaxError:
-Not all output files of rule run_bayou contain the same wildcards.
-  File "/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/Snakefile", line 177, in <module>
