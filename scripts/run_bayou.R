@@ -3,7 +3,7 @@ library(bayou)
 
 n_gen  = snakemake@config[["n_gen"]]
 burnin = snakemake@config[["burnin"]]
-tree_f = snakemake@input[["tree_f"]]
+# tree_f = snakemake@input[["tree_f"]]
 trait_f = snakemake@input[["trait_f"]]
 prior_f = snakemake@input[["prior_f"]]
 tree_f = paste0(strsplit(trait_f, "_rate")[[1]][1], ".nwk")

@@ -195,8 +195,8 @@ rule run_bt:
         trait_f = "data/{sample}.trait",
         prior_f = "config_files/pr{n}.bt"
     output:
-        checkpoint = "{sample}_pr{n}.bt",
-        ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
+        checkpoint = "{sample}_pr{n}.bt"
+        #ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
     log:
         "log/{sample}_pr{n}.bt.log"
     params:
@@ -226,12 +226,46 @@ rule bt:
         """
 
 
+rule run_bamm:
+    input:
+        trait_f = "data/{sample}.trait",
+        prior_f = "config_files/pr{n}.bamm"
+    output:
+        checkpoint = "{sample}_pr{n}.bamm"
+        #ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
+    log:
+        "log/{sample}_pr{n}.bamm.log"
+    threads: 1
+    benchmark:
+        "bench/{sample}_pr{n}.bamm.txt"
+    script:
+        "scripts/run_bamm.py"
+
+
+rule bamm:
+    input:
+        bamm_runs
+    output:
+        "bamm.report"
+    log:
+        "log/bamm.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    shell:
+        """
+        touch bamm.report
+        """
+
+
 rule report:
     input:
-        analysis_list,
+        "bt.report",
         "bayou.report",
+        "bamm.report",
         "out/simulated_trees_info.tsv",
-        "fig/tree_sim_N100_clade0.2_b" + str(birth) + "_d" + str(death) + ".pdf" 
+        "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
     output:
         report_name         = "report.html"
     run:

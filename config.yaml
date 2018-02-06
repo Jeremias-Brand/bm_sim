@@ -42,10 +42,16 @@ sel_rate:
 sel_prior_set:
     - 1
 sel_tool:
-    - "bayou"
-    - "bt"
+#    - "bayou"
+#    - "bt"
+    - "bamm"
 
 
 # MCMC parameters
 n_gen: 10000
 burnin: 0.3
+n_chains: 2
+mcmc_write_freq: 1000
+mcmc_print_freq: 1000
+mcmc_event_freq: 10
+
