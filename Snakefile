@@ -135,7 +135,7 @@ rule all:
 # TODO: the tree simulation must output a file that specifies where the shift is and also stores other params
 rule tre_sim:
     output:
-        "out/simulated_trees_info.tsv",
+        "out/simulated_trees_info.csv",
         tree_list
 
     log:
@@ -151,7 +151,7 @@ rule tre_sim:
 
 rule tre_sim_illustration:
     output:
-        "fig/tree_sim_N100_clade20_b" + str(birth) + "_d" + str(death) + ".pdf" 
+        "fig/tree_sim_N100_clade0.2_b" + str(birth) + "_d" + str(death) + ".pdf" 
     script:
         "scripts/sim_illustration.R"
 
@@ -264,7 +264,7 @@ rule report:
         "bt.report",
         "bayou.report",
         "bamm.report",
-        "out/simulated_trees_info.tsv",
+        "out/simulated_trees_info.csv",
         "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
     output:
         report_name         = "report.html"

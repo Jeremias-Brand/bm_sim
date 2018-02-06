@@ -1,0 +1,51 @@
+Options:
+Model:                           Independent Contrasts
+Tree File Name:                  data/t1_N10_clade0.2_b1.5_d0.5.nex
+Data File Name:                  data/t1_N10_clade0.2_b1.5_d0.5_rate10.trait
+Log File Name:                   ./out/bt/t1_N10_clade0.2_b1.5_d0.5_rate10.trait_bt_pr1_ch2.Log.txt
+Save Initial Trees:              False
+Save Trees:                      True
+Summary:                         False
+Seed:                            3387170885
+Precision:                       64 bits
+Cores:                           1
+Analysis Type:                   MCMC
+Sample Period:                   1000
+Iterations:                      10000
+Burn in:                         3000
+MCMC ML Start:                   False
+Schedule File:                   ./out/bt/t1_N10_clade0.2_b1.5_d0.5_rate10.trait_bt_pr1_ch2.Schedule.txt
+Rate Dev:                        AutoTune
+No of Rates:                     2
+Test for trait correlation:      True
+Kappa:                           Not in use
+Delta:                           Not in use
+Lambda:                          Not in use
+OU:                              Not in use
+Min Trans Taxa No:               10
+RJ Local Kappa:                  False
+RJ Local Lambda:                 False
+RJ Local Delta:                  False
+RJ Local OU:                     False
+Using VarRates:                  True
+Restrictions:
+    Alpha-1                      None
+    Sigma-1                      None
+Prior Information:
+    Priors
+        Alpha-1 - gamma 2.00 1.00 
+        Sigma-1 - gamma 2.00 1.00 
+        VRBL - sgamma 1.10 1.00 
+        VRNode - sgamma 1.10 1.00 
+Tree Information
+     Trees:                      1
+     Taxa:                       10
+     Sites:                      1
+Iteration	Lh	Tree No	Alpha 1	Sigma^2 1	No RJ Local Branch	No RJ Local Node	
+4000	-10.401984	1	2.223964971105	0.951528958319	2	0	
+5000	-12.469814	1	1.395621475031	1.143699088463	2	0	
+6000	-11.373226	1	0.811357686130	0.735993366688	1	0	
+7000	-12.823477	1	2.183753504962	1.462495247995	0	0	
+8000	-11.274202	1	0.822770111629	0.791370539189	0	0	
+9000	-12.030722	1	4.176949771272	0.544005953351	3	0	
+10000	-11.942001	1	0.856656218778	1.462751296692	0	0	
