@@ -1,6 +1,6 @@
 # TREE SIMULATION PARAMETERS
 # number of simulations per combination of characters
-n_sim: 10
+n_sim: 100
 # size of trees
 n_tips:
     - 10
@@ -28,7 +28,7 @@ death: 0.5
 # Analysis selection
 # not all tree combinations need to be run under the models but only this subset
 
-sel_n_sim: 4
+sel_n_sim: 10
 sel_n_tips: 
     - 10
     - 50
@@ -48,7 +48,7 @@ sel_tool:
 
 
 # MCMC parameters
-n_gen: 10000
+n_gen: 10000000
 burnin: 0.3
 n_chains: 2
 mcmc_write_freq: 1000
