@@ -19,7 +19,7 @@ bt_burnin = int(n_gen * burnin)
 
 for i in range(1,n_chains + 1):
 	outfile_n = "out/bt/" + prefix + ".bt.cmd"
-	copyfile("/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/config_files/pr1.bt", outfile_n)
+	copyfile("./config_files/pr1.bt", outfile_n)
 
 	with open(outfile_n, "a") as o_f:
 	    o_f.write("Iterations " + str(n_gen) + "\n")

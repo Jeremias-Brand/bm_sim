@@ -21,7 +21,7 @@ subprocess.call("scripts/setup_bamm.R " + tree_f + " "  + trait_f, shell=True)
 
 
 outfile_n = "out/bamm/" + prefix + ".bamm.cmd"
-copyfile("/Users/jeremias/Dropbox/Bioinformatics/Reports/bm_sim/config_files/pr1.bamm", outfile_n)
+copyfile("./config_files/pr1.bamm", outfile_n)
 with open(outfile_n, "a") as o_f:
     o_f.write("treefile = " + tree_f + "\n")
     o_f.write("traitfile = " + trait_f + "\n")
@@ -43,5 +43,3 @@ subprocess.call("bamm -c " + outfile_n, shell=True)
 
 with open(checkpoint, "w") as f:
 	f.write("Placeholder for better things")
-
-

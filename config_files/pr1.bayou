@@ -8,7 +8,7 @@ prior_q <- quote(
                             dsig2=list(scale=1), dk=list(lambda=15, kmax=200),
                             dsb=list(bmax=1,prob=1), dtheta=list(mean=mean(trait), sd=2)
                           ),
-                          fixed=fixed.pars)
+                          fixed=fixed.pars, plot.prior=F, model="OU")
 )
 
 fixed.pars <- list(alpha= 1e-10)
