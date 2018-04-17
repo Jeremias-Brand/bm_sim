@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-
+out/
 soft_OSX/
 
 *.Rproj
