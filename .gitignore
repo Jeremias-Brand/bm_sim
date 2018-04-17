@@ -18,3 +18,7 @@ JHNFDYIQOP/
 Rplots\.pdf
 
 \.snakemake/
+
+out/bayou/*/
+
+
