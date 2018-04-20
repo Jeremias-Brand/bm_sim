@@ -15,6 +15,7 @@ extract_clade <- function(tree, clade.size = 10) {
 
 
 sim_subclade <- function(ntips, clade.size, birth, death) {
+  require(TreeSim)
   # simulates a phylogeny with ntips that contains at least one subclade of size clade.size
   # returns list with tree and randomly chosen subclade
   subclade <- list()
@@ -44,4 +45,25 @@ simBM_2rates <- function(tree, subtree, R1=1, R2=10, model = "BM", root = 10) {
   # remove the shift value from the result
   trait <- c(trait_1[,,1][! shift_index], trait_2[,,1])
   return(trait)
+}
+
+
+color_subclade <- function(tree, subclade, outpath, outname) {
+  # given a tree and a monophyletic subclade this produces a plot with the sublaced colored red
+  require(ape)
+  if(!is.monophyletic(tree, subclade)) stop("the sublcade you specify is not monophyletic")
+  subclade_edges <-  which.edge(tree, subclade)
+  edge_col <- rep("black", dim(tree$edge)[1]) #defining a color vector; look up rep() and dim() functions!
+  edge_col[subclade_edges] <- "red" #specifying color of branches
+  nTips = length(tree$tip.label)
+  if(nTips < 20){
+    pdf(file = paste0(outpath, outname), width = 7, height = 7)
+  } else {
+    # for trees with many tips we need to scale the pdf
+    pdf(file = paste0(outpath, outname),
+        width = 2 * log10(length(tree$tip.label)),
+        height = 0.2 * length(tree$tip.label))
+  }
+  plot(tree, edge.color=edge_col)
+  dev.off()
 }

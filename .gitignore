@@ -2,6 +2,8 @@ out/
 data/
 R_tests/
 fig/
+bench/
+
 soft_OSX/
 \.DS_Store
 KLGUSHIPXA/
