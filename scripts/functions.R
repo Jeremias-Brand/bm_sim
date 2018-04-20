@@ -67,3 +67,4 @@ color_subclade <- function(tree, subclade, outpath, outname) {
   plot(tree, edge.color=edge_col)
   dev.off()
 }
+>>>>>>> bd688334905e55c51a5097b84ae5f761051c8c8c

@@ -5,7 +5,6 @@ fig/
 bench/
 out_bku/
 data_bku/
-
 soft_OSX/
 \.DS_Store
 KLGUSHIPXA/
@@ -15,4 +14,4 @@ Rplots\.pdf
 */\.*
 t*.txt
 t*.bt
-*.Rproj
+t*.txt
