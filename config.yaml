@@ -43,8 +43,8 @@ sel_prior_set:
     - 1
 sel_tool:
     - "bayou"
-#    - "bt"
-#    - "bamm"
+    - "bt"
+    - "bamm"
 
 
 # MCMC parameters

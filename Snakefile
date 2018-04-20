@@ -91,7 +91,6 @@ for s in sel_n_sim:
                     )
 
 
-
 bayou_runs = []
 for i in analysis_list:
     if "bayou" in i:
@@ -124,8 +123,6 @@ for i in analysis_list:
 
 # Rules -----------------------------------------------------------------------
 
-onstart:
-    "scripts/tre_sim.R"
 
 rule all:
     input:
@@ -137,7 +134,6 @@ rule tre_sim:
     output:
         "out/simulated_trees_info.csv",
         tree_list
-
     log:
         "log/tre_sim.log"
     params:
@@ -193,7 +189,8 @@ rule bayou:
 rule run_bt:
     input:
         trait_f = "data/{sample}.trait",
-        prior_f = "config_files/pr{n}.bt"
+        prior_f = "config_files/pr{n}.bt",
+        prior_null = "config_files/pr_null{n}.bt"
     output:
         checkpoint = "{sample}_pr{n}.bt"
         #ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
