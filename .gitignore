@@ -1,24 +1,20 @@
+out/
+data/
+R_tests/
+fig/
+soft_OSX/
+\.DS_Store
+KLGUSHIPXA/
+JHNFDYIQOP/
+Rplots\.pdf
+\.snakemake/
+
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-
-soft_OSX/
-
+t*.txt
 *.Rproj
 
-\.DS_Store
-
-fig/
-
-KLGUSHIPXA/
-
-JHNFDYIQOP/
-
-Rplots\.pdf
-
-\.snakemake/
-
-out/bayou/*/
 
 
