@@ -40,7 +40,10 @@ def check_trailing_slash( path ):
         path = path + "/"
     return path
 
+# build the directories
+dir_ls = ["data", "out", "out/bt", "out/bayou", "out/bamm"]
 
+save_mkdir(dir_ls)
 
 # Globals ---------------------------------------------------------------------
 
@@ -100,6 +103,8 @@ bt_runs = []
 for i in analysis_list:
     if "bt" in i:
         bt_runs.append(i)
+
+print(bt_runs)
 
 bamm_runs = []
 for i in analysis_list:
@@ -190,7 +195,7 @@ rule run_bt:
     input:
         trait_f = "data/{sample}.trait",
         prior_f = "config_files/pr{n}.bt",
-        prior_null = "config_files/pr_null{n}.bt"
+        prior_null = "config_files/prNull{n}.bt"
     output:
         checkpoint = "{sample}_pr{n}.bt"
         #ch_sum = "out/bt/{sample}_pr{n}.summary.txt"
@@ -208,18 +213,29 @@ rule run_bt:
 
 rule bt:
     input:
-        bt_runs
+        runs = bt_runs
     output:
-        "bt.report"
+        marginal = "out/bt/bt.marginalLH.tsv",
+        report = "bt.report"
     log:
         "log/bt.log"
     params:
         #nsim = config["nsim"],
         #n_tips = config["n_tips"]
     threads: 1
+    # using curly braces in snakemake requires escaping them by repeating
     shell:
         """
-        touch bt.report
+#sed -n -e '/It/,$p' out/bt/t1_N10_clade0.2_b1.5_d0.5_rate10.trait_bt_pr1_ch1.VarRates.txt | awk -F "\t" '{for(i=1;i<=8;i++) printf $i"\t"; print ""}' > dd
+        for run in $( find ./out/bt -name *Stones.txt );do
+        name=${{run##*/}}
+        name=${{name%.Stones.txt}}
+        echo -n ${{run##*/}}"\t"           
+        echo -n $name | tr "_" "\t"
+        echo -n "\t"
+        tail -1 $run | awk '{{print $NF}}'
+        done > {output.marginal}
+        touch {output.report}
         """
 
 

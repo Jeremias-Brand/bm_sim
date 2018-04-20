@@ -3,6 +3,8 @@ import subprocess
 
 n_gen  = snakemake.config["n_gen"]
 n_chains  = snakemake.config["n_chains"]
+bt_no_stones = snakemake.config["bt_no_stones"]
+bt_iter_stones = snakemake.config["bt_iter_stones"]
 burnin = snakemake.config["burnin"]
 trait_f = snakemake.input["trait_f"]
 prior_f = snakemake.input["prior_f"]
@@ -32,7 +34,7 @@ for i in range(1,n_chains + 1):
 	    o_f.write("Iterations " + str(n_gen) + "\n")
 	    o_f.write("Burnin " + str(bt_burnin) + "\n")
 	    o_f.write("logFile " + "./out/bt/" + prefix + "_bt_" + pr + "_ch" + str(i) + "\n")
-	    o_f.write("Stones 100 10000" + "\n")
+	    o_f.write("Stones " + str(bt_no_stones) + " " + str(bt_iter_stones) + "\n")
 	    o_f.write("SaveModels" + "\n")
 	    o_f.write("Run")
 	    
@@ -40,7 +42,7 @@ for i in range(1,n_chains + 1):
 	    o_f.write("Iterations " + str(n_gen) + "\n")
 	    o_f.write("Burnin " + str(bt_burnin) + "\n")
 	    o_f.write("logFile " + "./out/bt/" + prefix + "_bt_" + pr_null + "_ch" + str(i) + "\n")
-	    o_f.write("Stones 100 10000" + "\n")
+	    o_f.write("Stones " + str(bt_no_stones) + " " + str(bt_iter_stones) + "\n")
 	    o_f.write("SaveModels" + "\n")
 	    o_f.write("Run")
 
