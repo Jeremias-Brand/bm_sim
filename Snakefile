@@ -245,6 +245,7 @@ rule bt:
             name=${{name%.VarRates.txt}}
             for chain in $( find ./out/bt -name $base_name*VarRates.txt  );do 
                 chain_name=${{chain%.VarRates.txt}}
+                chain_name=${{chain_name##*/}}
                 chain_detail=$( echo -n $chain_name | tr "_" "\t" )
                 sed -n -e '/It/,$p' $chain  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> "out/bt/"$base_name"_VarRatesCombined.txt" 
                 wait
