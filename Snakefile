@@ -41,7 +41,7 @@ def check_trailing_slash( path ):
     return path
 
 # build the directories
-dir_ls = ["data", "out", "out/bt", "out/bayou", "out/bamm"]
+dir_ls = ["data", "out", "out/bt", "out/bayou", "out/bamm", "out/plots"]
 
 save_mkdir(dir_ls)
 
