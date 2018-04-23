@@ -20,14 +20,27 @@ All_VarRes$No_tips <- factor(All_VarRes$No_tips,
 
 var_sum <-  unite(All_VarRes, run, tree:tool, sep="_")
 
+################################################################################
+
+# First analysis plots
+
+width_multiplier <- length(unique(All_VarRes$rate_delta))
+pdf(file = "out/plots/bt_NoShifts_vs_NoTips.pdf", width = 7 * width_multiplier,
+    height = 7)
 p  <- ggplot(data = All_VarRes, aes(No_Pram, x = No_tips, color = factor(chain)))
-p  <- p + geom_boxplot(alpha=0.55) + facet_wrap(~ rate_delta) + theme_bw()
+p  <- p + geom_boxplot(alpha=0.55) + facet_grid(~ rate_delta) + theme_bw()
 p
+dev.off()
 
-
+wrap_multiplier <- length(unique(var_sum$run))/2
+pdf(file = "out/plots/bt_NoShifts_vs_Lh.pdf",
+    width = 7 * wrap_multiplier, height = 7 * wrap_multiplier)
 p  <- ggplot(data = var_sum, aes(x = factor(No_Pram), y = Lh, color=No_Pram))
 p  <- p + geom_point(alpha=0.55) + facet_wrap(~ run, scales = "free") + theme_bw()
 p
+dev.off()
+
+################################################################################
 
 
 

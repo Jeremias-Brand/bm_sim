@@ -26,8 +26,6 @@ import time
 configfile: "config.yaml"
 
 # Preparation------------------------------------------------------------------
-#TIMESTAMP = time.strftime("%Y%m%d")
-TIMESTAMP = "rcorrtest"
 # check if the necessary dirs exist and if not creates them
 def save_mkdir( dirs ):
 	for d in dirs:
@@ -67,13 +65,13 @@ for s in sel_n_sim:
                 for p in sel_prior_set:
                     for t in sel_tool:
                         analysis_list.append(
-                            "t"      +str(s)+ 
-                            "_N"     +str(n)+ 
+                            "t"      +str(s)+
+                            "_N"     +str(n)+
                             "_clade" +str(c)+
-                            "_b"     +str(birth)+ 
-                            "_d"     +str(death)+ 
-                            "_rate"  +str(r)+ 
-                            "_pr"    +str(p)+ 
+                            "_b"     +str(birth)+
+                            "_d"     +str(death)+
+                            "_rate"  +str(r)+
+                            "_pr"    +str(p)+
                             "."      +str(t)
                             )
 
@@ -84,13 +82,13 @@ for s in sel_n_sim:
         for c in sel_clade:
             for r in sel_rate:
                 tree_list.append("data/" +
-                    "t"      +str(s)+ 
-                    "_N"     +str(n)+ 
+                    "t"      +str(s)+
+                    "_N"     +str(n)+
                     "_clade" +str(c)+
-                    "_b"     +str(birth)+ 
-                    "_d"     +str(death)+ 
+                    "_b"     +str(birth)+
+                    "_d"     +str(death)+
                     "_rate"  +str(r)+
-                    ".trait" 
+                    ".trait"
                     )
 
 
@@ -111,19 +109,6 @@ for i in analysis_list:
     if "bamm" in i:
         bamm_runs.append(i)
 # define global things here
-
-
-# Full path to a folder that holds all of your FASTQ files.
-# FASTQ_DIR = check_trailing_slash(config["fastqdir"])
-# # loads all of the path into variable
-# TRANSRATE_DIR = check_trailing_slash(config["transrateDir"])
-# HOME_DIR = check_trailing_slash(config["homedir"])
-# VOUCHER_DIR = check_trailing_slash(config["voucher_dir"])
-
-
-# A Snakemake regular expression matching the forward mate FASTQ files.
-# we get a list with the names of all the files in the working directory
-
 
 
 # Rules -----------------------------------------------------------------------
@@ -152,7 +137,7 @@ rule tre_sim:
 
 rule tre_sim_illustration:
     output:
-        "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
+        "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf"
     script:
         "scripts/sim_illustration.R"
 
@@ -216,7 +201,10 @@ rule bt:
         runs = bt_runs
     output:
         marginal = "out/bt/bt.marginalLH.tsv",
-        log      = "out/bt/combined_logs.tsv", 
+        log      = "out/bt/combined_logs.tsv",
+        lhDelta  = "out/plots/bt_LhDelta_vs_NoTips.pdf",
+        shiftLh  = "out/plots/bt_NoShifts_vs_Lh.pdf",
+        shiftTip = "out/plots/bt_NoShifts_vs_NoTips.pdf",
         report   = "bt.report"
     log:
         "log/bt.log"
@@ -230,7 +218,7 @@ rule bt:
         for run in $( find ./out/bt -name *Stones.txt );do
             name=${{run##*/}}
             name=${{name%.Stones.txt}}
-            echo -n ${{run##*/}}"\t"           
+            echo -n ${{run##*/}}"\t"
             echo -n $name | tr "_" "\t"
             echo -n "\t"
             tail -1 $run | awk '{{print $NF}}'
@@ -243,21 +231,21 @@ rule bt:
             base_name=${{name%_ch*.VarRates.txt}}
             echo $base_name
             name=${{name%.VarRates.txt}}
-            for chain in $( find ./out/bt -name $base_name*VarRates.txt  );do 
+            for chain in $( find ./out/bt -name $base_name*VarRates.txt  );do
                 chain_name=${{chain%.VarRates.txt}}
                 chain_name=${{chain_name##*/}}
                 chain_detail=$( echo -n $chain_name | tr "_" "\t" )
-                sed -n -e '/It/,$p' $chain  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> "out/bt/"$base_name"_VarRatesCombined.txt" 
+                sed -n -e '/It/,$p' $chain  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> "out/bt/"$base_name"_VarRatesCombined.txt"
                 wait
             done
         done
 
-        # combine the scheduels of all the files so we can plot the alpha and sigma values      
+        # combine the scheduels of all the files so we can plot the alpha and sigma values
         for run in $( find ./out/bt -name *ch1.Log.txt );do
             name=${{run##*/}}
             chain_name=${{name%.Log.txt}}
             chain_detail=$( echo -n $chain_name | tr "_" "\t" )
-            sed -n -e '/Iteration\t/,$p' $run  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> {output.log}   
+            sed -n -e '/Iteration\t/,$p' $run  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> {output.log}
         done
 
         touch {output.report}
@@ -302,8 +290,13 @@ rule report:
         "bt.report",
         "bayou.report",
         "bamm.report",
-        "out/simulated_trees_info.csv"
-        # "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf" 
+        "out/simulated_trees_info.csv",
+        marginal = "out/bt/bt.marginalLH.tsv",
+        log      = "out/bt/combined_logs.tsv",
+        lhDelta  = "out/plots/bt_LhDelta_vs_NoTips.pdf",
+        shiftLh  = "out/plots/bt_NoShifts_vs_Lh.pdf",
+        shiftTip = "out/plots/bt_NoShifts_vs_NoTips.pdf",
+        # "fig/tree_sim_N100_clade0.2_b" +str(birth)+ "_d" +str(death)+ ".pdf"
     output:
         report_name         = "report.html"
     run:
