@@ -216,7 +216,8 @@ rule bt:
         runs = bt_runs
     output:
         marginal = "out/bt/bt.marginalLH.tsv",
-        report = "bt.report"
+        log      = "out/bt/combined_logs.tsv", 
+        report   = "bt.report"
     log:
         "log/bt.log"
     params:
@@ -226,15 +227,38 @@ rule bt:
     # using curly braces in snakemake requires escaping them by repeating
     shell:
         """
-#sed -n -e '/It/,$p' out/bt/t1_N10_clade0.2_b1.5_d0.5_rate10.trait_bt_pr1_ch1.VarRates.txt | awk -F "\t" '{for(i=1;i<=8;i++) printf $i"\t"; print ""}' > dd
         for run in $( find ./out/bt -name *Stones.txt );do
-        name=${{run##*/}}
-        name=${{name%.Stones.txt}}
-        echo -n ${{run##*/}}"\t"           
-        echo -n $name | tr "_" "\t"
-        echo -n "\t"
-        tail -1 $run | awk '{{print $NF}}'
+            name=${{run##*/}}
+            name=${{name%.Stones.txt}}
+            echo -n ${{run##*/}}"\t"           
+            echo -n $name | tr "_" "\t"
+            echo -n "\t"
+            tail -1 $run | awk '{{print $NF}}'
         done > {output.marginal}
+
+        # now we concatenate all the chains into one fuile for easy plotting in R
+        for run in $( find ./out/bt -name *ch1.VarRates.txt );do
+            name=${{run##*/}}
+            echo $name
+            base_name=${{name%_ch*.VarRates.txt}}
+            echo $base_name
+            name=${{name%.VarRates.txt}}
+            for chain in $( find ./out/bt -name $base_name*VarRates.txt  );do 
+                chain_name=${{chain%.VarRates.txt}}
+                chain_detail=$( echo -n $chain_name | tr "_" "\t" )
+                sed -n -e '/It/,$p' $chain  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> "out/bt/"$base_name"_VarRatesCombined.txt" 
+                wait
+            done
+        done
+
+        # combine the scheduels of all the files so we can plot the alpha and sigma values      
+        for run in $( find ./out/bt -name *ch1.Log.txt );do
+            name=${{run##*/}}
+            chain_name=${{name%.Log.txt}}
+            chain_detail=$( echo -n $chain_name | tr "_" "\t" )
+            sed -n -e '/Iteration\t/,$p' $run  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> {output.log}   
+        done
+
         touch {output.report}
         """
 
