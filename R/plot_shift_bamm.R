@@ -22,9 +22,9 @@ css <- credibleShiftSet(edata, expectedNumberOfShifts=1)
 plot.credibleshiftset(css, lwd=1.7, plotmax=4)
 
 shift_probs <- summary(edata)
+ 
 
-
-for (run in runs[1:10]){
+for (run in runs[2]){
   print(run)
   tree <- read.tree(paste0("data/", run, ".nwk"))
   edata <- getEventData(tree, eventdata = paste0("out/bamm/", run, "_", rate_par, ".trait_", prior_par, "_event_data.txt")

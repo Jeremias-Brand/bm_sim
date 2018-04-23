@@ -50,8 +50,8 @@ for (i in 1:n_sim){
       info_df[k,"shift_node"] = getMRCA(tree, subtree$tip.label)
       info_df[k,"subclade"] = paste(subtree$tip.label, collapse = " ")
       # bamm needs newick and bayestrait needs nexus
-      write.nexus(tree, file = paste0("R_tests/", name, ".nex"))
-      write.tree(tree, file = paste0("R_tests/", name, ".nwk"))
+      write.nexus(tree, file = paste0("data/", name, ".nex"))
+      write.tree(tree, file = paste0("data/", name, ".nwk"))
       color_subclade(tree, subtree$tip.label, outpath = "out/plots/", outname = paste0(name, ".pdf"))
       k = k + 1
       for (r in rates){
@@ -63,7 +63,7 @@ for (i in 1:n_sim){
   }
 }
 
-write.csv(info_df, "R_tests/simulated_trees_info.csv", quote = F, row.names = F)
+write.csv(info_df, "out/simulated_trees_info.csv", quote = F, row.names = F)
 
 
 # eval
