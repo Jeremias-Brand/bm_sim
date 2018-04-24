@@ -1,6 +1,7 @@
 library(ggplot2)  
 library(tidyr)
-library(dplyr)
+# we need this package toprevent masking from screwing everything up
+library(dtplyr)
 
 ################################################################################
 
@@ -11,12 +12,25 @@ col_names <- c("file", "tree", "No_tips", "clade_proportion", "birth",
                paste(rep(c("Node_ID", "Scaler", "Create_It", "Node_Branch"),params),
                      rep(1:params, each = 4)), sep = "_")
 
+rates_f <- list.files("out/bt", pattern = "*VarRatesCombined.txt")
+
 # combine all the files into one dataframe
-All_VarRes <- do.call(rbind,
-                           lapply(paste0("out/bt/", rates_f),
-                                  read.table, fill = TRUE, sep = "\t", col.names = col_names))
+# using the data.table version of this is actually at least one third faster!
+res_ls <- lapply(paste0("out/bt/", rates_f),
+       read.table, fill = TRUE, sep = "\t", col.names = col_names)
+All_VarRes <- rbindlist(res_ls)
+
+
+# All_VarRes <- do.call(rbind,
+#                            lapply(paste0("out/bt/", rates_f),
+#                                   read.table, fill = TRUE, sep = "\t", col.names = col_names))
 All_VarRes$No_tips <- factor(All_VarRes$No_tips,
                    levels = c("N10", "N50", "N100", "N200", "N400"))
+
+All_VarRes$rate_delta <- factor(All_VarRes$rate_delta,
+                                levels = c("rate1.trait", "rate2.trait",
+                                           "rate5.trait", "rate10.trait",
+                                           "rate100.trait"))
 
 var_sum <-  unite(All_VarRes, run, tree:tool, sep="_")
 
@@ -93,12 +107,34 @@ pdf(file = "out/plots/bt_BF_vs_NoTips.pdf", width = 7 * width_multiplier,
 BF_table %>%
   separate(run, sep = "_", c("tree", "No_tips", "clade_proportion", "birth",
                              "death", "rate_delta", "tool")) %>%
-  mutate(No_tips = factor(No_tips, levels = c("N10", "N50", "N100", "N200", "N400"))) %>%
+  mutate(No_tips = factor(No_tips, levels = c("N10", "N50", "N100", "N200", "N400")),
+         rate_delta = factor(rate_delta, levels = c("rate1.trait", "rate2.trait",
+                                                    "rate5.trait", "rate10.trait",
+                                                    "rate100.trait"))) %>%
   ggplot() +
   geom_jitter(aes(x=No_tips, y=BF), width=0.1) +
   ylab("Bayes Factor") + 
   xlab("Tree size") +
-  facet_wrap(~ rate_delta, scales = "free") + 
+  facet_grid(~ rate_delta, scales = "free") + 
+  geom_hline(yintercept=10, linetype="dashed", color = "red", size=2) +
+  geom_hline(yintercept=0, linetype="dashed", color = "blue", size=2) + 
+  theme_bw()
+dev.off()
+
+pdf(file = "out/plots/bt_BF_vs_NoTips_scalefree.pdf", width = 7 * width_multiplier,
+    height = 7)
+BF_table %>%
+  separate(run, sep = "_", c("tree", "No_tips", "clade_proportion", "birth",
+                             "death", "rate_delta", "tool")) %>%
+  mutate(No_tips = factor(No_tips, levels = c("N10", "N50", "N100", "N200", "N400")),
+         rate_delta = factor(rate_delta, levels = c("rate1.trait", "rate2.trait",
+                                                    "rate5.trait", "rate10.trait",
+                                                    "rate100.trait"))) %>%
+  ggplot() +
+  geom_jitter(aes(x=No_tips, y=BF), width=0.1) +
+  ylab("Bayes Factor") + 
+  xlab("Tree size") +
+  facet_wrap(~ rate_delta, scales = "free", nrow = 1) + 
   geom_hline(yintercept=10, linetype="dashed", color = "red", size=2) +
   geom_hline(yintercept=0, linetype="dashed", color = "blue", size=2) + 
   theme_bw()
@@ -108,7 +144,25 @@ dev.off()
 ################################################################################
 
 # Tree Parsing
+merge_branch_ls <- function(l){
+  res = c(l[1], l[2], paste(l[3:length(l)], collapse = "_"))
+  return(res)
+}
 
+translate <- function(x, dictionary){
+  res = dictionary[as.numeric(x)+1,2]
+  if (is.na(res)){
+    return("")
+    }
+  return(res)
+}
+
+translate_branch <- function(s, dictionary, sep = "_"){
+  res = s
+  cand = unlist(strsplit(s[3], "_"))
+  res[3] = paste(sapply(cand, translate, dictionary), collapse="_")
+  return(res)
+}
 ################################################################################
 # The VarRates file contains information about the tree that we need to determin where bt puts shifts
 
@@ -131,19 +185,5 @@ node_ls3 <- lapply(node_ls2, translate_branch, tip_df)
 node_df <- data.frame(matrix(unlist(node_ls3), nrow=n_nodes, byrow=T))
 names(node_df) <- c("bt_node", "length", "clade")
 
-merge_branch_ls <- function(l){
-  res = c(l[1], l[2], paste(l[3:length(l)], collapse = "_"))
-  return(res)
-  }
 
-translate <- function(x, dictionary){
-  return(dictionary[as.numeric(x)+1,2])
-}
-
-translate_branch <- function(s, dictionary, sep = "_"){
-  res = s
-  cand = unlist(strsplit(s[3], "_"))
-  res[3] = paste(sapply(cand, translate, dictionary), collapse="_")
-  return(res)
-  }
-
+tree <- read.tree("data/t1_N10_clade0.2_b1.5_d0.5.nwk")
