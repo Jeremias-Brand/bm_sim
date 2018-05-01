@@ -15,8 +15,11 @@ Rplots\.pdf
 t*.txt
 t*.bt
 t*.txt
-
-
+*.bt
+*.bamm
+*.bayou
+*.report
+*.html
 
 
 data_bku/

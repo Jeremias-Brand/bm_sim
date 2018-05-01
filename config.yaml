@@ -38,8 +38,11 @@ sel_n_tips:
 sel_clade:
     - 0.2 
 sel_rate:
+    - 1
     - 2
+    - 5  
     - 10
+    - 100
 sel_prior_set:
     - 1
 sel_tool:
