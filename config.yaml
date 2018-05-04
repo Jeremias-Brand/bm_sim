@@ -61,3 +61,13 @@ mcmc_event_freq: 10
 # MCMC for bt    
 bt_no_stones: 100
 bt_iter_stones: 1000
+# MCMC for bayou
+bayou_no_stones: 100
+bayou_iter_stones: 1000
+bayou_model_set:
+    - "free"
+      #    - "Null"
+    - "Klow"
+#    - "Kone"
+#   - "Kzero"
+
