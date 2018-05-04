@@ -3,6 +3,7 @@ library(bayou)
 
 n_gen  = snakemake@config[["n_gen"]]
 burnin = snakemake@config[["burnin"]]
+SE = snakemake@config[["SE"]]
 bayou_no_stones = snakemake@config[["bayou_no_stones"]]
 bayou_iter_stones = snakemake@config[["bayou_iter_stones"]]
 # tree_f = snakemake@input[["tree_f"]]
@@ -32,34 +33,35 @@ if (!name.check(tree, trait) == "OK") {
 
 prior.fixed <- eval(prior_q)
 
-
 chain_cmd <- quote(
   bayou.mcmc(
     tree = tree, dat = trait, SE = 0, model = "OU", prior = prior.fixed, startpar=startpar,
     ngen = n_gen, samp = 10, chunk = 100, control = NULL, tuning = NULL,
-    new.dir = outdir, plot.freq = NULL, ticker.freq = 10000,
+    new.dir = outdir, ticker.freq = 10000, plot.freq= 10000,
     outname = prefix
   )
 )
 
 ss1_cmd <- quote(
     steppingstone(
-        Bk=seq(0,1, length.out=bayou_no_stones), chain = ch1, tree = tree, dat = traits,
-        SE=SE, prior=e_prior, startpar = startpar, burnin = burnin,
-        new.dir = tempdir, ngen=, parallel = FALSE
+        Bk=seq(0,1, length.out=bayou_no_stones), chain = ch1, tree = tree, dat = trait,
+        SE=SE, prior=prior.fixed, startpar = startpar, burnin = burnin,
+        new.dir = tempdir, ngen=bayou_iter_stones, parallel = FALSE,
         )
     )
 
 ss2_cmd <- quote(
     steppingstone(
-        Bk=seq(0,1, length.out=bayou_no_stones), chain = ch2, tree = tree, dat = traits,
-        SE=SE, prior=e_prior, startpar = startpar, burnin = burnin,
-        new.dir = tempdir, ngen=ss_ngen, parallel = FALSE
+        Bk=seq(0,1, length.out=bayou_no_stones), chain = ch2, tree = tree, dat = trait,
+        SE=SE, prior=prior.fixed, startpar = startpar, burnin = burnin,
+        new.dir = tempdir, ngen=bayou_iter_stones, parallel = FALSE
         )
     )
   
+# Stepping stone function is plotting something even when passed the argument plot.freq=NULL
+# to run things anyway I capture the output plots
 
-
+pdf(paste0(outdir, prefix, "_", pr, ".chains.pdf"))
 t_ch1 <- eval(chain_cmd)
 t_ch2 <- eval(chain_cmd)
 # loading the chains
@@ -70,16 +72,18 @@ ch1 <- set.burnin(ch1, burnin)
 ch2 <- load.bayou(
   t_ch2,cleanup = F, file = paste0(outdir, prefix, "_", pr, "_2.rds"))
 ch2 <- set.burnin(ch2, burnin)
+dev.off()
 
-
-print(paste("Stepping Stone chain 1", msg))
+pdf(paste0(outdir, prefix, "_", pr, ".ss.pdf"))
+print(paste("Stepping Stone chain 1"))
 ss1 <- eval(ss1_cmd)
-print(paste("Stepping Stone chain 2", msg))
+print(paste("Stepping Stone chain 2"))
 ss2 <- eval(ss2_cmd)
 ss1 <- set.burnin(chain = ss1, burnin = burnin)
 lh1 <- ss1$lnr
 ss2 <- set.burnin(chain = ss2, burnin = burnin)
 lh2 <- ss2$lnr
+dev.off()
 
 sink(paste0(outdir, prefix, "_", pr, ".summary.txt"))
 print("# Chain 1")
@@ -88,8 +92,10 @@ print("# Chain 2")
 summary(ch2)  
 print("# Stepping stone chain 1")
 print(ss1)
+print(lh1)
 print("# Stepping stone chain 2")
 print(ss2)
+print(lh2)
 sink()
 
 
@@ -108,9 +114,9 @@ write.table(G_sig2, paste0(outdir, prefix, "_", pr, ".gelman.sig2.txt"), quote =
 pdf(paste0(outdir, prefix, "_", pr, ".ss.pdf"))
   eval(prior_q)
   par(mfrow=c(1,1))
-    gelman.R("lnL", chain1=ch1, chain2=ch2,
+     gelman.R("lnL", chain1=ch1, chain2=ch2,
                         plot=TRUE, type="n", ylim=c(0.9, 2))
-    gelman.R("sig2", chain1=ch1, chain2=ch2,
+     gelman.R("sig2", chain1=ch1, chain2=ch2,
                         plot=TRUE, type="n", ylim=c(0.9, 2))
     plot(ss1)
     plot(ss2)

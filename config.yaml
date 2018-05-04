@@ -52,7 +52,7 @@ sel_tool:
 
 
 # MCMC parameters
-n_gen: 1000000
+n_gen: 500000
 burnin: 0.3
 n_chains: 2
 mcmc_write_freq: 1000
@@ -62,8 +62,9 @@ mcmc_event_freq: 10
 bt_no_stones: 100
 bt_iter_stones: 1000
 # MCMC for bayou
-bayou_no_stones: 100
-bayou_iter_stones: 1000
+SE: 1
+bayou_no_stones: 10
+bayou_iter_stones: 10000
 bayou_model_set:
     - "free"
       #    - "Null"

@@ -153,13 +153,12 @@ rule run_bayou:
         plot       =  "out/bayou/{sample}_pr{prior}{n}.ss.pdf",
         sum        =  "out/bayou/{sample}_pr{prior}{n}.summary.txt"
     log:
-        "log/{sample}_pr{n}.bayou.log"
+        "log/{sample}_pr{prior}{n}.bayou.log"
     params:
         #nsim = config["nsim"],
         #n_tips = config["n_tips"]
     threads: 1
-    benchmark:
-        "bench/{sample}_pr{n}.bayou.txt"
+    benchmark: "bench/{sample}_pr{prior}{n}.bayou.txt"
     script:
         "scripts/run_bayou.R"
 
