@@ -1,8 +1,10 @@
 library(ggplot2)  
+library(ape)
 library(tidyr)
 # we need this package toprevent masking from screwing everything up
+library(dplyr)
 library(dtplyr)
-
+library(data.table)
 ################################################################################
 
 # Summarize the number of shifts
@@ -187,3 +189,4 @@ names(node_df) <- c("bt_node", "length", "clade")
 
 
 tree <- read.tree("data/t1_N10_clade0.2_b1.5_d0.5.nwk")
+write.table("", file="bt.report")

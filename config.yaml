@@ -38,8 +38,11 @@ sel_n_tips:
 sel_clade:
     - 0.2 
 sel_rate:
+    - 1
     - 2
+    - 5  
     - 10
+    - 100
 sel_prior_set:
     - 1
 sel_tool:
@@ -58,3 +61,14 @@ mcmc_event_freq: 10
 # MCMC for bt    
 bt_no_stones: 100
 bt_iter_stones: 1000
+# MCMC for bayou
+SE: 1
+bayou_no_stones: 10
+bayou_iter_stones: 10000
+bayou_model_set:
+    - "free"
+      #    - "Null"
+    - "Klow"
+#    - "Kone"
+#   - "Kzero"
+
