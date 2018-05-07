@@ -199,23 +199,12 @@ rule run_bt:
         "scripts/run_bt.py"
 
 
-rule bt:
+rule gather_bt:
     input:
         runs = bt_runs
     output:
         marginal = "out/bt/bt.marginalLH.tsv",
-        log      = "out/bt/combined_logs.tsv",
-        lhDelta  = "out/plots/bt_LhDelta_vs_NoTips.pdf",
-        shiftLh  = "out/plots/bt_NoShifts_vs_Lh.pdf",
-        shiftTip = "out/plots/bt_NoShifts_vs_NoTips.pdf",
-        report   = "bt.report"
-    log:
-        "log/bt.log"
-    params:
-        #nsim = config["nsim"],
-        #n_tips = config["n_tips"]
-    threads: 1
-    # using curly braces in snakemake requires escaping them by repeating
+        log      = "out/bt/combined_logs.tsv"
     shell:
         """
         for run in $( find ./out/bt -name *Stones.txt );do
@@ -239,7 +228,6 @@ rule bt:
                 chain_name=${{chain_name##*/}}
                 chain_detail=$( echo -n $chain_name | tr "_" "\t" )
                 sed -n -e '/It/,$p' $chain  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> "out/bt/"$base_name"_VarRatesCombined.txt"
-                wait
             done
         done
 
@@ -250,9 +238,28 @@ rule bt:
             chain_detail=$( echo -n $chain_name | tr "_" "\t" )
             sed -n -e '/Iteration\t/,$p' $run  | awk -F "\t" -v chain="$chain_name" -v chain_detail="$chain_detail" '{{printf chain "\t" chain_detail "\t" $i"\t"; print ""}}' | tail -n+2  >> {output.log}
         done
+        """ 
 
-        touch {output.report}
-        """
+
+rule bt:
+    input:
+        runs = bt_runs,
+        marginal = "out/bt/bt.marginalLH.tsv",
+        log      = "out/bt/combined_logs.tsv"
+    output:
+        lhDelta  = "out/plots/bt_LhDelta_vs_NoTips.pdf",
+        shiftLh  = "out/plots/bt_NoShifts_vs_Lh.pdf",
+        shiftTip = "out/plots/bt_NoShifts_vs_NoTips.pdf",
+        report   = "bt.report"
+    log:
+        "log/bt.log"
+    params:
+        #nsim = config["nsim"],
+        #n_tips = config["n_tips"]
+    threads: 1
+    # using curly braces in snakemake requires escaping them by repeating
+    script:
+        "scripts/summarize_bt.R"
 
 
 rule run_bamm:
