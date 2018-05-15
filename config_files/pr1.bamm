@@ -1,7 +1,7 @@
 # MCMC parameters
 sampleFromPriorOnly = 0                 
 runMCMC = 1                             
-simulatePriorShifts = 0
+simulatePriorShifts = 1
 loadEventData = 0                       
 eventDataInfile = event_data_in.txt
 initializeModel = 1                     
