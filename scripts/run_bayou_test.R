@@ -52,29 +52,36 @@ chain_cmd <- quote(
 
 t_ch1 <- eval(chain_cmd)
 t_ch2 <- eval(chain_cmd)
+print("chains run")
 # loading the chains
-ch1 <- load.bayou(
-  t_ch1, cleanup = F, file = paste0(outdir, prefix, "_1.rds"))
+ch1 <- load.bayou(t_ch1, save.Rdata=T, cleanup=F)
 ch1 <- set.burnin(ch1, burnin)
 
-ch2 <- load.bayou(
-  t_ch2,cleanup = F, file = paste0(outdir, prefix, "_2.rds"))
+ch2 <- load.bayou(t_ch2, save.Rdata=T, cleanup=F)
 ch2 <- set.burnin(ch2, burnin)
+print("XoXoXo")
+#  ch1 <- load.bayou(
+#    t_ch1, cleanup = F, file = paste0(outdir, prefix, "_1.rds"))
+#  ch1 <- set.burnin(ch1, burnin)
+#  
+#  ch2 <- load.bayou(
+#    t_ch2,cleanup = F, file = paste0(outdir, prefix, "_2.rds"))
+#  ch2 <- set.burnin(ch2, burnin)
 
 sink(paste0(outdir, prefix, "_", pr, ".summary.txt"))
 print("# Chain 1")
 summary(ch1)
 print("# Chain 2")
-summary(ch2)  
+#summary(ch2)  
 sink()
 
 
-G_lnl <- gelman.R("lnL", chain1=ch1, chain2=ch2,
-                  plot=F, type="n", ylim=c(0.9, 2))
+#G_lnl <- gelman.R("lnL", chain1=ch1, chain2=ch2,
+#                  plot=F, type="n", ylim=c(0.9, 2))
 
-G_sig2 <- gelman.R("sig2", chain1=ch1, chain2=ch2,
-         plot=F, type="n", ylim=c(0.9, 2))
+#G_sig2 <- gelman.R("sig2", chain1=ch1, chain2=ch2,
+#         plot=F, type="n", ylim=c(0.9, 2))
 
-write.table(G_lnl, paste0(outdir, prefix, ".gelman.lnl.txt"), quote = F, row.names = F)
-write.table(G_sig2, paste0(outdir, prefix, ".gelman.sig2.txt"), quote = F, row.names = F)
-write.csv(x = "", file = checkpoint)
+#write.table(G_lnl, paste0(outdir, prefix, ".gelman.lnl.txt"), quote = F, row.names = F)
+#write.table(G_sig2, paste0(outdir, prefix, ".gelman.sig2.txt"), quote = F, row.names = F)
+#write.csv(x = "", file = checkpoint)
