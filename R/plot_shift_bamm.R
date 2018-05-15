@@ -11,7 +11,7 @@ runs <- unlist(
     list.files(path = "data/", pattern = "*nwk"),
                         split = ".nwk"))
 
-tree_name = "t1_N10_clade0.2_b1.5_d0.5"
+tree_name = "t1_N100_clade0.2_b1.5_d0.5"
 rate_par = "rate10"
 prior_par = "pr1"
 
