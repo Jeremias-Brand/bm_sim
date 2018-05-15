@@ -27,7 +27,6 @@ with open(outfile_n, "a") as o_f:
     o_f.write("mcmcWriteFreq =  " + str(mcmc_write_freq) + "\n")
     o_f.write("printFreq =  " + str(mcmc_print_freq) + "\n")
     o_f.write("eventDataWriteFreq =  " + str(mcmc_event_freq) + "\n")
-    o_f.write("simulatePriorShifts =  1 \n")
     o_f.write("numberOfGenerations = " + str(n_gen) + "\n")
     o_f.write("numberOfChains = " + str(n_chains) + "\n")
     o_f.write("mcmcOutfile = out/bamm/" + prefix + "_mcmc_out.txt" + "\n")
