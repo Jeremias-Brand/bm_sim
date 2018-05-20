@@ -45,6 +45,7 @@ sel_rate:
     - 100
 sel_prior_set:
     - 1
+    - 2
 sel_tool:
     - "bayou"
     - "bt"
@@ -55,9 +56,9 @@ sel_tool:
 n_gen: 1000000
 burnin: 0.3
 n_chains: 2
-mcmc_write_freq: 1000
+mcmc_write_freq: 100
 mcmc_print_freq: 1000000
-mcmc_event_freq: 1000
+mcmc_event_freq: 100
 # MCMC for bt    
 bt_no_stones: 100
 bt_iter_stones: 1000

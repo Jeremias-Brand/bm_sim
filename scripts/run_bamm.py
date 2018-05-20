@@ -6,8 +6,7 @@ n_chains  = snakemake.config["n_chains"]
 burnin = snakemake.config["burnin"]
 mcmc_write_freq = snakemake.config["mcmc_write_freq"]
 mcmc_print_freq = snakemake.config["mcmc_print_freq"]
-mcmc_event_freq = int(n_gen/5000)
-print(mcmc_event_freq)
+mcmc_event_freq = snakemake.config["mcmc_event_freq"]
 trait_f = snakemake.input["trait_f"]
 prior_f = snakemake.input["prior_f"]
 tree_f = trait_f.split("_rate")[0] + ".nwk" 
