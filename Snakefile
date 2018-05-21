@@ -282,17 +282,16 @@ rule bamm:
     input:
         bamm_runs
     output:
-        "bamm.report"
+        "bamm.report",
+        "out/bamm/basic_stats_mcmc_out.txt"
     log:
         "log/bamm.log"
     params:
         #nsim = config["nsim"],
         #n_tips = config["n_tips"]
-    threads: 1
-    shell:
-        """
-        touch bamm.report
-        """
+    threads: 10
+    script:
+        "scripts/plot_shift_bamm.R"
 
 
 rule report:

@@ -82,7 +82,6 @@ estimate_mode <- function(s) {
 
 
 basic_stats_bamm_mcmc <- function(mcmc_file, expectedNumberOfShifts, burnin) {
-  
   mcmc_out <- read.table(mcmc_file, sep = ",", header = TRUE)
   burnstart <- floor(burnin * nrow(mcmc_out))
   postburn <- mcmc_out[burnstart:nrow(mcmc_out), ]
@@ -127,7 +126,17 @@ basic_stats_wrapper <- function(mcmc_file, expectedNumberOfShifts, burnin) {
   }
 
 
-
+get_mcmc_prob_wrapper <- function(run, rate_pars, prior_pars){
+# this version allows more efficient parallelization
+  temp_list = list()
+  for (p in prior_pars) {
+    for (r in rate_pars){
+      res <- lapply(run, get_mcmc_prob, r, p)
+      temp_list = c(temp_list, res)
+    }
+  }
+  return(temp_list)
+}
 
 
 get_mcmc_prob <- function(tree_name, rate_par, prior_par) {
@@ -138,14 +147,14 @@ get_mcmc_prob <- function(tree_name, rate_par, prior_par) {
   library(data.table)
   N_tips <- strsplit(tree_name, "_")[[1]][2]
   tree <- read.tree(paste0("data/", tree_name, ".nwk"))
-  edata <- getEventData(tree, eventdata = paste0("out/bamm/", tree_name, "_", rate_par, ".trait_", prior_par, "_event_data.txt")
+  edata <- getEventData(tree, eventdata = paste0("out/bamm/", tree_name, "_rate", rate_par, ".trait_", prior_par, "_event_data.txt")
                         ,type= "trait"   , burnin=0.1)
   css <- credibleShiftSet(edata, expectedNumberOfShifts=1)
   
   # pdf(paste0("out/bamm/", tree_name, "_", rate_par, ".trait_", prior_par, "_credibleshiftset.pdf"), width=14, height = 14)
   # plot.credibleshiftset(css, lwd=1.7, plotmax=9)
   # dev.off()
-  postfile <- paste0("out/bamm/", tree_name, "_", rate_par, ".trait_", prior_par, "_mcmc_out.txt")
+  postfile <- paste0("out/bamm/", tree_name, "_rate", rate_par, ".trait_", prior_par, "_mcmc_out.txt")
   pdf(paste0("out/bamm/", tree_name, "_", rate_par, ".trait_", prior_par, "_prior_post.pdf"), width=14, height = 14)
   pripost_tbl <- plotPrior(postfile , expectedNumberOfShifts=1)
   dev.off()
@@ -158,7 +167,6 @@ get_mcmc_prob <- function(tree_name, rate_par, prior_par) {
   
   return(pripost_df)
 }
-
 
 BF_pairwise <- function(mcmc_out, expectedNumberOfShifts = 1, m0 = 0, m1 = 1) {
   # The input must be an integer
@@ -173,11 +181,16 @@ BF_pairwise <- function(mcmc_out, expectedNumberOfShifts = 1, m0 = 0, m1 = 1) {
   names(prior) <- configurations # we need to name it gaing so we remember what shifts hat what prior probability.
   
   prior_odds <- prior[m1 + 1]/prior[m0 + 1] # odd for 1 vs 2 shift
-  
+    
+  if (sum(post$N_shifts == m1) == 0){
+    return(NA)
+  }
   # if we don't have 0 sampled they recommend we take just 1/(number of samples)
   # as the probability. 
   if (m0 == 0 & sum(post$N_shifts == m0) == 0){
     post_odds <- post$prob[post$N_shifts == m1]/(1/nrow(mcmc_out))
+  } else if (sum(post$N_shifts == m0) == 0){
+    return(NA)
   } else {
     post_odds <- post$prob[post$N_shifts == m1]/post$prob[post$N_shifts == m0]
   }
